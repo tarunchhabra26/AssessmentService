@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - API Help</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container" id="content">
+
+        {% block content %}{% endblock %}
+
+        <div class="text-center" id="text-center">
+          {% block footer %}
+          &copy; Copyright 2016 by <a href="http:/www.ncsu.edu/">NCSU</a>.
+          {% endblock %}
+        </div>
+
+    </div>
+
+  </body>
+</html>
