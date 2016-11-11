@@ -35,6 +35,12 @@ from restapi.components.auth.decorators import require_app_key
 from modules.organization import mod as organizations_module
 app.register_blueprint(organizations_module)
 
+from modules.assignment import mod as assignment_module
+app.register_blueprint(assignment_module)
+
+from modules.student import mod as student_module
+app.register_blueprint(student_module)
+
 """
 Routes that does not matter.
 """
