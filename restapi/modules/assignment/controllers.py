@@ -5,62 +5,62 @@ from flask import Blueprint, jsonify, request
 from restapi.utils.decorators import crossdomain
 from restapi.modules import responses, errors, statuscodes
 from restapi.components.auth.decorators import require_app_key
-from restapi.modules.organization.models import Organization, db, OrganizationSchema
+from restapi.modules.assignment.models import Assignment, db, AssignmentSchema
 from sqlalchemy.exc import IntegrityError
 
-mod = Blueprint('organization', __name__, url_prefix='/api/v<float:version>/organization')
+mod = Blueprint('assignment', __name__, url_prefix='/api/v<float:version>/assignment')
 
-@mod.route('/<int:org_id>', methods=['GET'])
+@mod.route('/<int:assign_id>', methods=['GET'])
 @crossdomain
-def get_organization(version, org_id):
+def get_organization(version, assign_id):
     """
     Controller for API Function that gets a cake by ID
-    @param org_id: org id
+    @param assign_id: org id
     @return: Response and HTTP cod
     """
 
     if math.floor(version) == 1:
-        org = Organization.query.filter_by(id=org_id).first()
+        assignment = Assignment.query.filter_by(id=assign_id).first()
 
-        if org is None:
+        if assignment is None:
             return jsonify(errors.error_object_not_found(), statuscodes.HTTP_NOT_FOUND)
 
-        org_schema = OrganizationSchema()
-        result = org_schema.dump(org)
+        assign_schema = AssignmentSchema()
+        result = assign_schema.dump(assignment)
         return jsonify(
-            responses.create_single_object_response('success', result.data, "organization")), statuscodes.HTTP_OK
+            responses.create_single_object_response('success', result.data, "assignment")), statuscodes.HTTP_OK
     else:
         return jsonify(errors.error_incorrect_version(version)), statuscodes.HTTP_VERSION_UNSUPPORTED
 
-@mod.route('/<int:org_id>', methods=['DELETE'])
+@mod.route('/<int:assign_id>', methods=['DELETE'])
 @crossdomain
 @require_app_key
-def delete_org(version, org_id):
+def delete_org(version, assign_id):
     """
     Controller for API Function that gets a cake by ID
-    @param org_id: org id
+    @param assign_id: assignment id
     @return: Response and HTTP code
     """
 
     # API Version 1.X
     if math.floor(version) == 1:
 
-        org = Organization.query.filter_by(id=org_id).first()
+        assignment = Assignment.query.filter_by(id=assign_id).first()
 
-        if org is None:
+        if assignment is None:
             return jsonify(errors.error_object_not_found()), statuscodes.HTTP_NOT_FOUND
 
-        db.session.delete(org)
+        db.session.delete(assignment)
 
         try:
             db.session.commit()
         except IntegrityError as ex:
             return jsonify(errors.error_commit_error(ex)), statuscodes.HTTP_INTERNAL_ERROR
 
-        org_schema = OrganizationSchema()
-        result = org_schema.dump(org)
+        assign_schema = AssignmentSchema()
+        result = assign_schema.dump(assignment)
         return jsonify(
-            responses.create_single_object_response('success', result.data, "organization")), statuscodes.HTTP_OK
+            responses.create_single_object_response('success', result.data, "assignment")), statuscodes.HTTP_OK
 
     # Unsupported Versions
     else:
@@ -78,13 +78,13 @@ def get_all_orgs(version):
     # API Version 1.X
     if math.floor(version) == 1:
 
-        cakes = Organization.query.all()
-        cake_schema = OrganizationSchema(only=("id", "name", "address"),
+        assignments = Assignment.query.all()
+        assign_schema = AssignmentSchema(only=("id", "name"),
                                           # Here you can filter out stuff.
                                           many=True)
-        results = cake_schema.dump(cakes)
+        results = assign_schema.dump(assignments)
         return jsonify(
-            responses.create_multiple_object_response('success', results.data, 'organizations')), statuscodes.HTTP_OK
+            responses.create_multiple_object_response('success', results.data, 'assignments')), statuscodes.HTTP_OK
 
     # Unsupported Versions
     else:
@@ -94,32 +94,31 @@ def get_all_orgs(version):
 @mod.route('/', methods=['POST', 'PUT'])
 @crossdomain
 @require_app_key
-def insert_org(version):
+def insert_assignment(version):
     """
     Controller for API Function that inserts new cakes in the database
     @return: Response and HTTP code
     """
 
     # GET POST DATA
-    org_name = request.form['name']
-    org_address = request.form['address']
+    assign_name = request.form['name']
 
     # API Version 1.X
     if math.floor(version) == 1:
 
-        org = Organization(name=org_name, address=org_address)
-        db.session.add(org)
+        assignment = Assignment(name=assign_name)
+        db.session.add(assignment)
 
         try:
             db.session.commit()
         except IntegrityError as ex:
             return jsonify(errors.error_commit_error(ex)), statuscodes.HTTP_INTERNAL_ERROR
 
-        org_schema = OrganizationSchema()
-        result = org_schema.dump(org)
+        assign_schema = AssignmentSchema()
+        result = assign_schema.dump(assignment)
         return jsonify(
             responses.create_multiple_object_response('success', result.data,
-                                                      'organization')), statuscodes.HTTP_OK
+                                                      'assignment')), statuscodes.HTTP_OK
 
     # Unsupported Versions
     else:

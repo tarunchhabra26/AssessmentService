@@ -18,10 +18,10 @@ class Assignment(BaseModel):
         return org_dict
 
     def __repr__(self):
-        return '<Organization %r>' % self.cakename
+        return '<Assignment %r>' % self.name
 
 
-class OrganizationSchema(Schema):
+class AssignmentSchema(Schema):
 
     class Meta:
-        fields = ('id', 'name', 'address')
+        fields = ('id', 'name')
