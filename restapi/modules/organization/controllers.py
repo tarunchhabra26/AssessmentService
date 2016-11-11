@@ -14,7 +14,7 @@ mod = Blueprint('organization', __name__, url_prefix='/api/v<float:version>/orga
 @crossdomain
 def get_organization(version, org_id):
     """
-    Controller for API Function that gets a cake by ID
+    Controller for API Function that gets a organization by ID
     @param org_id: org id
     @return: Response and HTTP cod
     """
