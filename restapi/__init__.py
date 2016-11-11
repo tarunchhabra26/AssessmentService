@@ -32,9 +32,6 @@ log_to_file = log_setup.get_default_setup()
 from restapi.components.auth.decorators import require_app_key
 
 ## API routing
-from modules.cakes import mod as cakes_module
-app.register_blueprint(cakes_module)
-
 from modules.organization import mod as organizations_module
 app.register_blueprint(organizations_module)
 
