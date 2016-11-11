@@ -71,18 +71,18 @@ def delete_org(version, org_id):
 @crossdomain
 def get_all_orgs(version):
     """
-    Controller for API Function that gets all cakes in the database.
+    Controller for API Function that gets all organizations in the database.
     @return: Response and HTTP code
     """
 
     # API Version 1.X
     if math.floor(version) == 1:
 
-        cakes = Organization.query.all()
-        cake_schema = OrganizationSchema(only=("id", "name", "address"),
+        organizations = Organization.query.all()
+        org_schema = OrganizationSchema(only=("id", "name", "address"),
                                           # Here you can filter out stuff.
                                           many=True)
-        results = cake_schema.dump(cakes)
+        results = org_schema.dump(organizations)
         return jsonify(
             responses.create_multiple_object_response('success', results.data, 'organizations')), statuscodes.HTTP_OK
 
