@@ -12,7 +12,7 @@ mod = Blueprint('assignment', __name__, url_prefix='/api/v<float:version>/assign
 
 @mod.route('/<int:assign_id>', methods=['GET'])
 @crossdomain
-def get_organization(version, assign_id):
+def get_assignment(version, assign_id):
     """
     Controller for API Function that gets a cake by ID
     @param assign_id: org id
@@ -35,9 +35,9 @@ def get_organization(version, assign_id):
 @mod.route('/<int:assign_id>', methods=['DELETE'])
 @crossdomain
 @require_app_key
-def delete_org(version, assign_id):
+def delete_assign(version, assign_id):
     """
-    Controller for API Function that gets a cake by ID
+    Controller for API Function that gets a assignment by ID
     @param assign_id: assignment id
     @return: Response and HTTP code
     """
@@ -69,7 +69,7 @@ def delete_org(version, assign_id):
 
 @mod.route('/', methods=['GET'])
 @crossdomain
-def get_all_orgs(version):
+def get_all_assign(version):
     """
     Controller for API Function that gets all cakes in the database.
     @return: Response and HTTP code
