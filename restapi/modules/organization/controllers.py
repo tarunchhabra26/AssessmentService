@@ -37,7 +37,7 @@ def get_organization(version, org_id):
 @require_app_key
 def delete_org(version, org_id):
     """
-    Controller for API Function that gets a cake by ID
+    Controller for API Function that gets an organization by ID
     @param org_id: org id
     @return: Response and HTTP code
     """
@@ -96,7 +96,7 @@ def get_all_orgs(version):
 @require_app_key
 def insert_org(version):
     """
-    Controller for API Function that inserts new cakes in the database
+    Controller for API Function that inserts new organization in the database
     @return: Response and HTTP code
     """
 
