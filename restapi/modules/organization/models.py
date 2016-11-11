@@ -20,7 +20,7 @@ class Organization(BaseModel):
         return org_dict
 
     def __repr__(self):
-        return '<Organization %r>' % self.cakename
+        return '<Organization %r>' % self.name
 
 
 class OrganizationSchema(Schema):
