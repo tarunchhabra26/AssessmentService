@@ -41,6 +41,9 @@ app.register_blueprint(assignment_module)
 from modules.student import mod as student_module
 app.register_blueprint(student_module)
 
+from modules.score import  mod as score_module
+app.register_blueprint(score_module)
+
 """
 Routes that does not matter.
 """

@@ -1,8 +1,8 @@
 __author__ = "Tarun Chhabra"
 
 debug = True
-init = False
-run = True
+init = True
+run = False
 
 if run is True:
     from restapi import app, db
