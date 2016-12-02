@@ -6,13 +6,16 @@ from restapi.utils.decorators import crossdomain
 from restapi.modules import responses, errors, statuscodes
 from restapi.components.auth.decorators import require_app_key
 from restapi.modules.score.models import Score, db, ScoreSchema
+from restapi.modules.student.models import Student
+from restapi.modules.team.models import Team
 from sqlalchemy.exc import IntegrityError
 
 mod = Blueprint('score', __name__, url_prefix='/api/v<float:version>/score')
 
-@mod.route('/<int:org_id>', methods=['GET'])
+@mod.route('/<int:score_id>', methods=['GET'])
 @crossdomain
-def get_organization(version, score_id):
+@require_app_key
+def get_score(version, score_id):
     """
     Controller for API Function that gets a score by ID
     @param org_id: score id
@@ -69,6 +72,7 @@ def delete_score(version, score_id):
 
 @mod.route('/', methods=['GET'])
 @crossdomain
+@require_app_key
 def get_all_scores(version):
     """
     Controller for API Function that gets all organizations in the database.
@@ -132,3 +136,29 @@ def insert_score(version):
     else:
         return jsonify(errors.error_incorrect_version(version)), statuscodes.HTTP_VERSION_UNSUPPORTED
 
+@mod.route('/<int:team_id>/<student_id>/<self_score_id>/<team_score_id>', methods=['GET'])
+@crossdomain
+@require_app_key
+def get_sapa_factor(version,team_id, student_id, self_score_id,team_score_id):
+     if math.floor(version) == 1:
+        team = Team.query.filter_by(id=team_id).first()
+        student = Student.query.filter_by(id=student_id).first()
+        self_score = Score.query.filter_by(id=self_score_id).first()
+        team_score = Score.query.filter_by(id=team_score_id).first()
+
+        if self_score is None:
+            return jsonify(errors.error_object_not_found(), statuscodes.HTTP_NOT_FOUND)
+        if team_score is None:
+            return jsonify(errors.error_object_not_found(), statuscodes.HTTP_NOT_FOUND)
+
+        score_schema = ScoreSchema()
+        result = sapa_factor(self_score=self_score,team_scores=team_score)
+        return jsonify(
+            responses.create_single_object_response('success', result, "sapa factor")), statuscodes.HTTP_OK
+     else:
+        return jsonify(errors.error_incorrect_version(version)), statuscodes.HTTP_VERSION_UNSUPPORTED
+
+def sapa_factor(self_score, team_scores):
+    avg = float(sum(team_scores))/float(len(team_scores))
+    sapa = math.sqrt(self_score/team_scores)
+    return sapa
